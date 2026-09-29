@@ -1,0 +1,726 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Memuat...</title>
+    <style>
+      /* ============================================================
+   SEMUA STYLING HALAMAN USER DI FILE INI
+   ============================================================ */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      :root {
+        --bg: #0b0d12;
+        --bg2: #12151d;
+        --panel: #171b25;
+        --border: #232936;
+        --text: #e7eaf0;
+        --muted: #8a93a6;
+        --accent: #6c8cff;
+        --accent2: #8aa2ff;
+        --ok: #4ade80;
+        --err: #f87171;
+        --warn: #fbbf24;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", sans-serif;
+        background: radial-gradient(
+          1200px 600px at 50% -10%,
+          #1b2130 0%,
+          var(--bg) 60%
+        );
+        color: var(--text);
+        min-height: 100dvh;
+        -webkit-font-smoothing: antialiased;
+        display: flex;
+        flex-direction: column;
+      }
+      .view {
+        display: flex;
+        flex-direction: column;
+        min-height: 100dvh;
+        max-width: 720px;
+        width: 100%;
+        margin: 0 auto;
+      }
+      .view.hidden {
+        display: none;
+      }
+
+      /* ---------- Topbar ---------- */
+      .topbar {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 18px 20px;
+        border-bottom: 1px solid var(--border);
+        background: rgba(18, 21, 29, 0.85);
+        backdrop-filter: blur(12px);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+      }
+      .avatar {
+        width: 56px;
+        height: 56px;
+        border-radius: 16px;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(135deg, #6c8cff, #a06cff);
+        font-size: 22px;
+        font-weight: 700;
+        color: #fff;
+        flex-shrink: 0;
+      }
+      .meta {
+        flex: 1;
+        min-width: 0;
+      }
+      .name {
+        font-size: 16px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+      }
+      .sub {
+        font-size: 13px;
+        color: var(--muted);
+        margin-top: 2px;
+      }
+      .sub.ok {
+        color: var(--ok);
+      }
+      .sub.err {
+        color: var(--err);
+      }
+      .sub.wait {
+        color: var(--warn);
+      }
+
+      /* ---------- Content ---------- */
+      .content {
+        flex: 1;
+        padding: 24px 20px 40px;
+      }
+      .content.center {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
+
+      .panel {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 24px 22px;
+        margin-bottom: 16px;
+      }
+      .panel-icon {
+        font-size: 26px;
+        margin-bottom: 10px;
+      }
+      .panel h2 {
+        font-size: 17px;
+        font-weight: 700;
+        margin-bottom: 6px;
+      }
+      .panel p {
+        font-size: 14px;
+        color: var(--muted);
+        line-height: 1.5;
+        margin-bottom: 16px;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 13px 20px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        background: var(--bg2);
+        color: var(--text);
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        font-family: inherit;
+        transition: 0.15s;
+      }
+      .btn:hover {
+        background: #1a1f2b;
+        border-color: #2d3444;
+      }
+      .btn.primary {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: #fff;
+      }
+      .btn.primary:hover {
+        background: var(--accent2);
+        border-color: var(--accent2);
+      }
+      .btn.block {
+        width: 100%;
+      }
+      .btn:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+      }
+
+      .divider {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: var(--muted);
+        font-size: 11px;
+        margin: 20px 0;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+      }
+      .divider::before,
+      .divider::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+      }
+
+      .join-form {
+        display: flex;
+        gap: 10px;
+      }
+      .join-form input {
+        flex: 1;
+        padding: 13px 16px;
+        border-radius: 12px;
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        color: var(--text);
+        font-size: 15px;
+        font-family: inherit;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        outline: none;
+      }
+      .join-form input:focus {
+        border-color: var(--accent);
+      }
+
+      .status {
+        margin-top: 16px;
+        font-size: 13px;
+        text-align: center;
+        color: var(--muted);
+        min-height: 18px;
+      }
+      .status.err {
+        color: var(--err);
+      }
+
+      /* ---------- Share view ---------- */
+      .lead {
+        font-size: 14px;
+        color: var(--muted);
+        margin-bottom: 16px;
+      }
+      .big-code {
+        font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+        font-size: clamp(36px, 10vw, 58px);
+        font-weight: 800;
+        letter-spacing: 0.22em;
+        background: linear-gradient(135deg, #6c8cff, #a06cff);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        margin: 14px 0 24px;
+        padding: 6px;
+      }
+      .row {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .hint {
+        font-size: 13px;
+        color: var(--muted);
+        margin-top: 20px;
+        max-width: 340px;
+      }
+
+      /* ---------- Chat view ---------- */
+      .chat-view {
+        height: 100dvh;
+      }
+      .chat-topbar {
+        padding: 12px 16px;
+      }
+      .icon-btn {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        background: var(--bg2);
+        color: var(--text);
+        cursor: pointer;
+        flex-shrink: 0;
+        display: grid;
+        place-items: center;
+        font-size: 18px;
+        font-family: inherit;
+        transition: 0.15s;
+      }
+      .icon-btn:hover {
+        background: #1a1f2b;
+      }
+      .icon-btn.primary {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: #fff;
+      }
+      .icon-btn.primary:hover {
+        background: var(--accent2);
+      }
+      .icon-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .messages {
+        flex: 1;
+        overflow-y: auto;
+        padding: 20px 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .messages::-webkit-scrollbar {
+        width: 6px;
+      }
+      .messages::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 3px;
+      }
+
+      .msg {
+        display: flex;
+        flex-direction: column;
+        max-width: 78%;
+      }
+      .msg.me {
+        align-self: flex-end;
+        align-items: flex-end;
+      }
+      .msg.peer {
+        align-self: flex-start;
+      }
+      .bubble {
+        padding: 10px 14px;
+        border-radius: 16px;
+        font-size: 15px;
+        line-height: 1.45;
+        word-wrap: break-word;
+        white-space: pre-wrap;
+      }
+      .msg.me .bubble {
+        background: var(--accent);
+        color: #fff;
+        border-bottom-right-radius: 4px;
+      }
+      .msg.peer .bubble {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-bottom-left-radius: 4px;
+      }
+      .time {
+        font-size: 11px;
+        color: var(--muted);
+        margin-top: 4px;
+        padding: 0 4px;
+      }
+      .system {
+        align-self: center;
+        font-size: 12px;
+        color: var(--muted);
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        padding: 5px 12px;
+        border-radius: 999px;
+        margin: 6px 0;
+      }
+
+      .composer {
+        display: flex;
+        gap: 10px;
+        padding: 14px 16px calc(14px + env(safe-area-inset-bottom));
+        border-top: 1px solid var(--border);
+        background: rgba(18, 21, 29, 0.9);
+        backdrop-filter: blur(12px);
+      }
+      .composer input {
+        flex: 1;
+        padding: 13px 16px;
+        border-radius: 12px;
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        color: var(--text);
+        font-size: 15px;
+        font-family: inherit;
+        outline: none;
+      }
+      .composer input:focus {
+        border-color: var(--accent);
+      }
+      .composer input:disabled {
+        opacity: 0.55;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ============ VIEW 1: PROFIL ============ -->
+    <section id="viewProfile" class="view">
+      <header class="topbar">
+        <div class="avatar" id="avatar">?</div>
+        <div class="meta">
+          <div class="name" id="displayName">@...</div>
+          <div class="sub">Halaman pribadimu</div>
+        </div>
+      </header>
+
+      <main class="content">
+        <div class="panel">
+          <div class="panel-icon">✨</div>
+          <h2>Mulai chat baru</h2>
+          <p>Buat room dengan kode acak, lalu bagikan link ke satu orang.</p>
+          <button id="createBtn" class="btn primary block">Buat Room</button>
+        </div>
+
+        <div class="divider"><span>atau</span></div>
+
+        <div class="panel">
+          <div class="panel-icon">🔑</div>
+          <h2>Gabung dengan kode</h2>
+          <p>Masukkan kode 6 karakter dari temanmu.</p>
+          <form id="joinForm" class="join-form">
+            <input
+              id="codeInput"
+              maxlength="6"
+              placeholder="KODE"
+              autocomplete="off"
+              spellcheck="false"
+            />
+            <button type="submit" class="btn">Gabung</button>
+          </form>
+        </div>
+
+        <p id="profileStatus" class="status"></p>
+      </main>
+    </section>
+
+    <!-- ============ VIEW 2: SHARE (host menunggu) ============ -->
+    <section id="viewShare" class="view hidden">
+      <header class="topbar">
+        <button class="icon-btn" id="backFromShare">←</button>
+        <div class="meta">
+          <div class="name">Room dibuat 🎉</div>
+          <div class="sub wait" id="shareStatus">Menunggu partner...</div>
+        </div>
+      </header>
+
+      <main class="content center">
+        <p class="lead">Bagikan kode ini ke satu orang</p>
+        <div class="big-code" id="bigCode">------</div>
+        <div class="row">
+          <button class="btn" id="copyCode">Salin Kode</button>
+          <button class="btn primary" id="copyLink">Salin Link Undangan</button>
+        </div>
+        <p class="hint">
+          Setelah partner bergabung, chat akan otomatis terbuka.
+        </p>
+      </main>
+    </section>
+
+    <!-- ============ VIEW 3: CHAT ============ -->
+    <section id="viewChat" class="view hidden chat-view">
+      <header class="topbar chat-topbar">
+        <button class="icon-btn" id="leaveChat">←</button>
+        <div class="meta">
+          <div class="name">Room <span id="chatCode">------</span></div>
+          <div class="sub" id="chatStatus">Menghubungkan...</div>
+        </div>
+      </header>
+
+      <main id="messages" class="messages"></main>
+
+      <form id="msgForm" class="composer">
+        <input
+          id="msgInput"
+          placeholder="Tulis pesan..."
+          autocomplete="off"
+          disabled
+        />
+        <button type="submit" id="sendBtn" class="icon-btn primary" disabled>
+          ➤
+        </button>
+      </form>
+    </section>
+
+    <script>
+      /* ============================================================
+   SEMUA LOGIKA HALAMAN USER DI FILE INI JUGA
+   Server hanya bertugas serve file ini untuk /u/<username>
+   ============================================================ */
+
+      const username = decodeURIComponent(
+        location.pathname.split("/").filter(Boolean).pop() || "",
+      );
+      const joinParam = (
+        new URLSearchParams(location.search).get("join") || ""
+      ).toUpperCase();
+
+      document.title = `@${username} — Chat`;
+
+      /* ---------- View switcher ---------- */
+      const views = {
+        profile: document.getElementById("viewProfile"),
+        share: document.getElementById("viewShare"),
+        chat: document.getElementById("viewChat"),
+      };
+      function showView(name) {
+        for (const k in views) views[k].classList.toggle("hidden", k !== name);
+      }
+
+      /* ---------- Isi profil ---------- */
+      document.getElementById("avatar").textContent = (
+        username[0] || "?"
+      ).toUpperCase();
+      document.getElementById("displayName").textContent = "@" + username;
+
+      /* ---------- Koneksi WebSocket (auto host, tanpa config) ---------- */
+      const WS_URL =
+        (location.protocol === "https:" ? "wss://" : "ws://") + location.host;
+      let ws = null,
+        currentCode = null,
+        peerOnline = false;
+
+      function connectWS(onOpen) {
+        ws = new WebSocket(WS_URL);
+        ws.onopen = () => onOpen && onOpen();
+        ws.onmessage = (e) => {
+          try {
+            handleMessage(JSON.parse(e.data));
+          } catch {}
+        };
+        ws.onclose = () => {
+          peerOnline = false;
+          setChatStatus("Koneksi terputus", "err");
+          setInputEnabled(false);
+        };
+        ws.onerror = () => setChatStatus("Gagal terhubung ke server", "err");
+      }
+
+      function handleMessage(msg) {
+        switch (msg.type) {
+          case "room":
+            currentCode = msg.code;
+            document.getElementById("bigCode").textContent = msg.code;
+            document.getElementById("chatCode").textContent = msg.code;
+            if (msg.role === "host") {
+              showView("share");
+            } else {
+              showView("chat");
+              setChatStatus("Menunggu partner...", "wait");
+              setInputEnabled(false);
+            }
+            break;
+
+          case "peer-joined":
+            peerOnline = true;
+            showView("chat");
+            setChatStatus("🟢 Partner terhubung", "ok");
+            setInputEnabled(true);
+            addSystem("Partner bergabung");
+            break;
+
+          case "peer-left":
+            peerOnline = false;
+            setChatStatus("🟡 Partner keluar", "wait");
+            setInputEnabled(false);
+            addSystem("Partner keluar");
+            break;
+
+          case "chat":
+            addMessage(msg.text, "peer", msg.time);
+            break;
+
+          case "error":
+            if (!views.profile.classList.contains("hidden")) {
+              setProfileStatus(msg.message, "err");
+            } else {
+              setChatStatus(msg.message, "err");
+            }
+            break;
+        }
+      }
+
+      /* ---------- VIEW PROFIL ---------- */
+      const createBtn = document.getElementById("createBtn");
+      const joinForm = document.getElementById("joinForm");
+      const codeInput = document.getElementById("codeInput");
+      const profileStatus = document.getElementById("profileStatus");
+
+      function setProfileStatus(t, k = "") {
+        profileStatus.textContent = t;
+        profileStatus.className = "status " + k;
+      }
+
+      codeInput.addEventListener("input", () => {
+        codeInput.value = codeInput.value
+          .toUpperCase()
+          .replace(/[^A-Z0-9]/g, "");
+      });
+
+      createBtn.onclick = () => {
+        createBtn.disabled = true;
+        createBtn.textContent = "Membuat...";
+        connectWS(() => ws.send(JSON.stringify({ type: "create" })));
+      };
+
+      joinForm.onsubmit = (e) => {
+        e.preventDefault();
+        const code = codeInput.value.trim().toUpperCase();
+        if (code.length < 4)
+          return setProfileStatus("Kode minimal 4 karakter", "err");
+        setProfileStatus("Menghubungkan...");
+        connectWS(() => ws.send(JSON.stringify({ type: "join", code })));
+      };
+
+      /* ---------- VIEW SHARE ---------- */
+      document.getElementById("backFromShare").onclick = () => {
+        if (ws) ws.close();
+        ws = null;
+        currentCode = null;
+        createBtn.disabled = false;
+        createBtn.textContent = "Buat Room";
+        showView("profile");
+      };
+
+      async function copyText(t) {
+        try {
+          await navigator.clipboard.writeText(t);
+        } catch {
+          const ta = document.createElement("textarea");
+          ta.value = t;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand("copy");
+          ta.remove();
+        }
+      }
+
+      document.getElementById("copyCode").onclick = async (e) => {
+        await copyText(currentCode);
+        e.target.textContent = "✓ Tersalin";
+        setTimeout(() => (e.target.textContent = "Salin Kode"), 1500);
+      };
+
+      document.getElementById("copyLink").onclick = async (e) => {
+        const link = `${location.origin}/?join=${currentCode}`;
+        await copyText(link);
+        e.target.textContent = "✓ Tersalin";
+        setTimeout(() => (e.target.textContent = "Salin Link Undangan"), 1500);
+      };
+
+      /* ---------- VIEW CHAT ---------- */
+      const messagesEl = document.getElementById("messages");
+      const msgForm = document.getElementById("msgForm");
+      const msgInput = document.getElementById("msgInput");
+      const sendBtn = document.getElementById("sendBtn");
+      const chatStatus = document.getElementById("chatStatus");
+
+      function setChatStatus(t, k = "") {
+        chatStatus.textContent = t;
+        chatStatus.className = "sub " + k;
+      }
+
+      function setInputEnabled(on) {
+        msgInput.disabled = !on;
+        sendBtn.disabled = !on;
+        if (on) msgInput.focus();
+      }
+
+      function addMessage(text, who, time) {
+        const wrap = document.createElement("div");
+        wrap.className = "msg " + who;
+
+        const bubble = document.createElement("div");
+        bubble.className = "bubble";
+        bubble.textContent = text;
+        wrap.appendChild(bubble);
+
+        if (time) {
+          const t = document.createElement("div");
+          t.className = "time";
+          t.textContent = new Date(time).toLocaleTimeString("id-ID", {
+            hour: "2-digit",
+            minute: "2-digit",
+          });
+          wrap.appendChild(t);
+        }
+        messagesEl.appendChild(wrap);
+        messagesEl.scrollTop = messagesEl.scrollHeight;
+      }
+
+      function addSystem(text) {
+        const el = document.createElement("div");
+        el.className = "system";
+        el.textContent = text;
+        messagesEl.appendChild(el);
+        messagesEl.scrollTop = messagesEl.scrollHeight;
+      }
+
+      msgForm.onsubmit = (e) => {
+        e.preventDefault();
+        const text = msgInput.value.trim();
+        if (!text || !peerOnline || ws.readyState !== WebSocket.OPEN) return;
+        ws.send(JSON.stringify({ type: "chat", text }));
+        addMessage(text, "me", Date.now());
+        msgInput.value = "";
+        msgInput.focus();
+      };
+
+      document.getElementById("leaveChat").onclick = () => {
+        if (ws) ws.close();
+        ws = null;
+        currentCode = null;
+        messagesEl.innerHTML = "";
+        createBtn.disabled = false;
+        createBtn.textContent = "Buat Room";
+        showView("profile");
+      };
+
+      /* ---------- AUTO-JOIN dari link undangan ---------- */
+      if (joinParam) {
+        setProfileStatus(`Bergabung ke room ${joinParam}...`);
+        connectWS(() =>
+          ws.send(JSON.stringify({ type: "join", code: joinParam })),
+        );
+      }
+    </script>
+  </body>
+</html>
